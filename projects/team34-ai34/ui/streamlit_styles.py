@@ -65,6 +65,7 @@ div[data-testid="stAppViewContainer"],
 div[data-testid="stAppViewContainer"] > .main {
   background: var(--pg-bg-main) !important;
   color: var(--pg-text-primary) !important;
+  overflow-x: hidden;
 }
 
 header[data-testid="stHeader"],
@@ -628,6 +629,7 @@ div[data-testid="stChatMessage"]:has(.pg-config-bubble-anchor) div[data-testid="
 div[data-testid="stForm"]:has(.pg-empty-composer-anchor),
 div[data-testid="stForm"]:has(.pg-docked-composer-anchor) {
   position: relative;
+  box-sizing: border-box;
   width: min(var(--pg-composer-max-width), calc(100% - 2rem));
   height: fit-content !important;
   min-height: 3.35rem;
@@ -681,6 +683,7 @@ div[data-testid="stForm"]:has(.pg-empty-composer-anchor) div[data-testid="stText
 div[data-testid="stForm"]:has(.pg-docked-composer-anchor) div[data-testid="stTextArea"],
 div[data-testid="stForm"]:has(.pg-empty-composer-anchor) div[data-testid="stTextInput"],
 div[data-testid="stForm"]:has(.pg-docked-composer-anchor) div[data-testid="stTextInput"] {
+  min-width: 0 !important;
   margin: 0 !important;
 }
 
@@ -708,11 +711,14 @@ div[data-testid="stForm"]:has(.pg-docked-composer-anchor) div[data-testid="stTex
 
 div[data-testid="stForm"]:has(.pg-empty-composer-anchor) div[data-testid="stTextArea"] textarea,
 div[data-testid="stForm"]:has(.pg-docked-composer-anchor) div[data-testid="stTextArea"] textarea {
+  width: 100% !important;
+  max-width: 100% !important;
   min-height: 2.35rem !important;
   height: 2.55rem !important;
   max-height: 8.25rem !important;
   resize: none !important;
   overflow-y: hidden !important;
+  overflow-x: hidden !important;
   border: 0 !important;
   border-radius: 0 !important;
   background: transparent !important;
@@ -720,6 +726,9 @@ div[data-testid="stForm"]:has(.pg-docked-composer-anchor) div[data-testid="stTex
   box-shadow: none !important;
   color: var(--pg-text-primary) !important;
   line-height: 1.35 !important;
+  white-space: pre-wrap !important;
+  overflow-wrap: anywhere !important;
+  word-break: break-word !important;
 }
 
 div[data-testid="stForm"]:has(.pg-empty-composer-anchor) div[data-testid="stTextArea"] textarea::placeholder,

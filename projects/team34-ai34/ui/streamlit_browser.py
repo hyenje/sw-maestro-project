@@ -52,15 +52,26 @@ def install_composer_autosize() -> None:
     });
   }
 
+  function setStyleIfChanged(node, property, value) {
+    if (
+      node.style.getPropertyValue(property) === value &&
+      node.style.getPropertyPriority(property) === "important"
+    ) {
+      return;
+    }
+    node.style.setProperty(property, value, "important");
+  }
+
   function resize(textarea) {
-    textarea.style.setProperty("height", minHeight + "px", "important");
+    setStyleIfChanged(textarea, "height", minHeight + "px");
     const nextHeight = Math.min(maxHeight, Math.max(minHeight, textarea.scrollHeight));
-    textarea.style.setProperty("height", nextHeight + "px", "important");
-    textarea.style.setProperty(
+    setStyleIfChanged(textarea, "height", nextHeight + "px");
+    setStyleIfChanged(
+      textarea,
       "overflow-y",
-      textarea.scrollHeight > maxHeight ? "auto" : "hidden",
-      "important"
+      textarea.scrollHeight > maxHeight ? "auto" : "hidden"
     );
+    setStyleIfChanged(textarea, "overflow-x", "hidden");
   }
 
   function wire(textarea) {
