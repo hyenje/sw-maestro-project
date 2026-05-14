@@ -12,6 +12,7 @@ def solve_problem(
     debate_rounds: int = 1,
     use_llm: bool = True,
     model: str | None = None,
+    search_mode: str = "auto",
     temperature: float = 0.35,
 ) -> SolveResponse:
     final_response = None
@@ -21,6 +22,7 @@ def solve_problem(
         debate_rounds=debate_rounds,
         use_llm=use_llm,
         model=model,
+        search_mode=search_mode,
         temperature=temperature,
     ):
         if event["type"] == "final_response":
@@ -36,6 +38,7 @@ def solve_problem_stream(
     debate_rounds: int = 1,
     use_llm: bool = True,
     model: str | None = None,
+    search_mode: str = "auto",
     temperature: float = 0.35,
 ):
     llm = LLMClient(model=model, temperature=temperature, enabled=use_llm)
@@ -47,6 +50,8 @@ def solve_problem_stream(
         debate_rounds=debate_rounds,
         use_llm=use_llm,
         model=llm.model,
+        search_mode=search_mode,
+        search_enabled=supervisor.search_client.enabled,
         problem=problem,
     )
     try:
@@ -55,6 +60,7 @@ def solve_problem_stream(
                 problem=problem,
                 persona_count=persona_count,
                 debate_rounds=debate_rounds,
+                search_mode=search_mode,
             )
         )
     except Exception as exc:
@@ -68,6 +74,7 @@ def continue_discussion(
     max_agents: int = 2,
     use_llm: bool = True,
     model: str | None = None,
+    search_mode: str = "auto",
     temperature: float = 0.35,
 ) -> SolveResponse:
     final_response = None
@@ -77,6 +84,7 @@ def continue_discussion(
         max_agents=max_agents,
         use_llm=use_llm,
         model=model,
+        search_mode=search_mode,
         temperature=temperature,
     ):
         if event["type"] == "final_response":
@@ -92,6 +100,7 @@ def continue_discussion_stream(
     max_agents: int = 2,
     use_llm: bool = True,
     model: str | None = None,
+    search_mode: str = "auto",
     temperature: float = 0.35,
 ):
     llm = LLMClient(model=model, temperature=temperature, enabled=use_llm)
@@ -102,6 +111,7 @@ def continue_discussion_stream(
         max_agents=max_agents,
         use_llm=use_llm,
         model=llm.model,
+        search_mode=search_mode,
         user_content=user_content,
     )
     try:
@@ -110,6 +120,7 @@ def continue_discussion_stream(
                 response=response,
                 user_content=user_content,
                 max_agents=max_agents,
+                search_mode=search_mode,
             )
         )
     except Exception as exc:
@@ -128,6 +139,18 @@ def _log_stream_event(event: dict[str, object]) -> None:
     if event_type == "personas_ready":
         personas = event.get("personas", [])
         terminal_log("personas_ready", count=len(personas) if hasattr(personas, "__len__") else "?")
+        return
+    if event_type in {"search_started", "search_queries", "search_finished"}:
+        terminal_log(
+            event_type,
+            phase=event.get("phase"),
+            mode=event.get("mode"),
+            provider=event.get("provider"),
+            status=event.get("status"),
+            queries=len(event.get("queries", [])) if isinstance(event.get("queries"), list) else 0,
+            results=event.get("result_count"),
+            elapsed_ms=event.get("elapsed_ms"),
+        )
         return
     if event_type == "agent_started":
         terminal_log(

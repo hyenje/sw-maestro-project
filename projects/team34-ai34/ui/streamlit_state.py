@@ -12,6 +12,7 @@ def default_chat_settings() -> dict:
         "max_reply_agents": 2,
         "use_llm": True,
         "model": os.getenv("PERSONA_GRAPH_MODEL", "gpt-5.4-mini"),
+        "search_mode": "auto",
         "temperature": 0.35,
     }
 
@@ -26,7 +27,7 @@ def ensure_chat_state() -> None:
         "pg_confirmed_settings": None,
         "pg_clear_draft": False,
         "pg_settings": default_chat_settings(),
-        "pg_settings_policy": "ask_each_time",
+        "pg_settings_policy": "use_session_default",
         "pg_show_settings_dialog": False,
         "pg_stream_messages": [],
         "pg_stream_personas": [],

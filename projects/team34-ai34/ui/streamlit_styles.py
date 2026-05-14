@@ -54,8 +54,12 @@ def render_chat_styles() -> None:
   --pg-radius-xl: 20px;
   --pg-radius-full: 999px;
   --pg-chat-max-width: 780px;
-  --pg-composer-max-width: 820px;
+  --pg-composer-max-width: 780px;
+  --pg-composer-safe-space: 6rem;
+  --pg-chat-live-left: 50vw;
+  --pg-chat-live-width: min(var(--pg-chat-max-width), calc(100vw - 2rem));
   --pg-sidebar-width: 16.25rem;
+  --pg-sidebar-live-width: var(--pg-sidebar-width);
 }
 
 html,
@@ -102,7 +106,7 @@ div[data-testid="stMainBlockContainer"] {
   width: 100%;
   min-height: 100vh;
   padding: 0 !important;
-  padding-bottom: 8.8rem !important;
+  padding-bottom: var(--pg-composer-safe-space) !important;
 }
 
 section[data-testid="stSidebar"] {
@@ -252,6 +256,80 @@ details[data-testid="stExpander"] {
   border-radius: var(--pg-radius-md) !important;
 }
 
+details[data-testid="stExpander"]:has(.pg-agent-group-content-anchor) {
+  max-width: var(--pg-chat-max-width);
+  margin: 0 auto 1rem auto;
+  border-color: var(--pg-border-default) !important;
+  background: var(--pg-bg-system) !important;
+}
+
+details[data-testid="stExpander"]:has(.pg-agent-group-content-anchor) summary {
+  min-height: 2.9rem;
+  color: var(--pg-text-primary) !important;
+  font-size: 0.9rem;
+  font-weight: 750;
+}
+
+details[data-testid="stExpander"]:has(.pg-agent-group-content-anchor) summary:hover {
+  background: var(--pg-bg-surface-muted) !important;
+}
+
+.pg-agent-group-details {
+  max-width: var(--pg-chat-max-width);
+  margin: 0 auto 1rem auto;
+  border: 1px solid var(--pg-border-default);
+  border-radius: var(--pg-radius-md);
+  background: var(--pg-bg-system);
+  overflow: hidden;
+}
+
+.pg-agent-group-details summary {
+  display: flex;
+  align-items: center;
+  min-height: 2.9rem;
+  padding: 0.55rem 0.85rem;
+  color: var(--pg-text-primary);
+  font-size: 0.9rem;
+  font-weight: 750;
+  line-height: 1.35;
+  cursor: pointer;
+}
+
+.pg-agent-group-details summary:hover {
+  background: var(--pg-bg-surface-muted);
+}
+
+.pg-agent-group-content {
+  padding: 0.2rem 0.85rem 0.75rem;
+}
+
+.pg-agent-group-content-anchor {
+  display: none;
+}
+
+.pg-agent-group-message {
+  display: flex;
+  gap: 0.65rem;
+  width: 100%;
+  padding: 0.2rem 0 0.85rem;
+}
+
+.pg-agent-group-message:last-child {
+  padding-bottom: 0.1rem;
+}
+
+.pg-agent-group-body {
+  flex: 1 1 auto;
+  max-width: none;
+  border-radius: var(--pg-radius-md);
+  padding: 0.68rem 0.78rem;
+  font-size: 0.92rem;
+  line-height: 1.52;
+  color: var(--pg-text-primary);
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
 div[data-testid="stDialog"] div[role="dialog"] {
   border: 1px solid var(--pg-border-default) !important;
   background: var(--pg-bg-surface-subtle) !important;
@@ -379,37 +457,6 @@ div[data-testid="stDialog"] div[role="dialog"] {
   margin-top: 0.68rem;
 }
 
-.st-key-pg_empty_samples,
-div[data-testid="stVerticalBlock"]:has(.pg-empty-samples-anchor) {
-  max-width: 42rem;
-  margin: 0 auto 1.15rem;
-  padding: 0 1rem;
-}
-
-.st-key-pg_empty_samples div[data-testid="stElementContainer"]:has(.pg-empty-samples-anchor),
-div[data-testid="stElementContainer"]:has(.pg-empty-samples-anchor) {
-  display: none !important;
-}
-
-.st-key-pg_empty_samples div[data-testid="stButton"] > button,
-div[data-testid="stVerticalBlock"]:has(.pg-empty-samples-anchor) div[data-testid="stButton"] > button {
-  min-height: 2.25rem !important;
-  border: 1px solid var(--pg-border-default) !important;
-  border-radius: var(--pg-radius-full) !important;
-  background: var(--pg-bg-surface-subtle) !important;
-  color: var(--pg-text-secondary) !important;
-  padding: 0.32rem 0.72rem !important;
-  font-size: 0.82rem !important;
-  line-height: 1.2 !important;
-}
-
-.st-key-pg_empty_samples div[data-testid="stButton"] > button:hover,
-div[data-testid="stVerticalBlock"]:has(.pg-empty-samples-anchor) div[data-testid="stButton"] > button:hover {
-  border-color: var(--pg-border-strong) !important;
-  background: var(--pg-bg-surface-muted) !important;
-  color: var(--pg-text-primary) !important;
-}
-
 .pg-chat-thread {
   display: flex;
   flex-direction: column;
@@ -487,6 +534,53 @@ div[data-testid="stVerticalBlock"]:has(.pg-empty-samples-anchor) div[data-testid
 .pg-chat-bubble-system {
   background: var(--pg-bg-system);
   border: 1px solid var(--pg-border-default);
+}
+
+.pg-moderator-preview {
+  color: var(--pg-text-primary);
+}
+
+.pg-moderator-full {
+  margin-top: 0.58rem;
+  border-top: 1px solid var(--pg-border-default);
+  padding-top: 0.42rem;
+}
+
+.pg-moderator-full summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: var(--pg-text-muted);
+  font-size: 0.78rem;
+  font-weight: 750;
+  line-height: 1.35;
+  cursor: pointer;
+  list-style: none;
+}
+
+.pg-moderator-full summary::-webkit-details-marker {
+  display: none;
+}
+
+.pg-moderator-full summary::after {
+  content: "v";
+  color: var(--pg-text-muted);
+  font-size: 0.8rem;
+}
+
+.pg-moderator-full[open] summary::after {
+  content: "^";
+}
+
+.pg-moderator-full summary:hover {
+  color: var(--pg-text-primary);
+}
+
+.pg-moderator-full-body {
+  margin-top: 0.45rem;
+  color: var(--pg-text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.55;
 }
 
 .pg-chat-bubble-agent:hover {
@@ -659,9 +753,9 @@ div[data-testid="stElementContainer"]:has(.pg-docked-composer-anchor) {
 div[data-testid="stForm"]:has(.pg-docked-composer-anchor) {
   position: fixed;
   z-index: 50;
-  left: 50%;
+  left: var(--pg-chat-live-left);
   transform: translateX(-50%);
-  width: min(var(--pg-composer-max-width), calc(100vw - 2rem));
+  width: min(var(--pg-composer-max-width), var(--pg-chat-live-width), calc(100vw - 2rem));
   bottom: 1.05rem;
 }
 
@@ -863,16 +957,123 @@ div[data-testid="stBottomBlockContainer"] {
   line-height: 1.45;
 }
 
+.pg-chat-shell.pg-activity-shell {
+  margin: 0.1rem auto 0.55rem auto;
+}
+
+.pg-activity-row {
+  width: calc(100% - 3.45rem);
+  margin-left: 3.45rem;
+}
+
+.pg-work-activity {
+  display: inline-block;
+  max-width: 100%;
+  color: var(--pg-text-muted);
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.pg-work-activity summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.42rem;
+  cursor: pointer;
+  list-style: none;
+  color: var(--pg-text-muted);
+  font-weight: 700;
+  user-select: none;
+}
+
+.pg-work-activity summary::-webkit-details-marker {
+  display: none;
+}
+
+.pg-work-activity summary:hover {
+  color: var(--pg-text-secondary);
+}
+
+.pg-work-title {
+  color: inherit;
+}
+
+.pg-work-summary {
+  color: var(--pg-text-muted);
+  font-size: 0.82rem;
+  font-weight: 650;
+}
+
+.pg-work-chevron {
+  display: inline-flex;
+  transform: translateY(-0.01rem);
+  color: var(--pg-text-muted);
+  font-size: 1rem;
+  transition: transform 120ms ease;
+}
+
+.pg-work-activity[open] .pg-work-chevron {
+  transform: rotate(90deg);
+}
+
+.pg-work-body {
+  margin-top: 0.72rem;
+  border-top: 1px solid var(--pg-border-default);
+  padding-top: 0.68rem;
+}
+
+.pg-work-step + .pg-work-step {
+  margin-top: 0.62rem;
+}
+
+.pg-work-step-title {
+  color: var(--pg-text-primary);
+  font-size: 0.82rem;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.pg-work-step-detail {
+  color: var(--pg-text-secondary);
+  font-size: 0.8rem;
+  line-height: 1.5;
+  margin-top: 0.14rem;
+}
+
+.pg-work-query-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.34rem;
+  margin-top: 0.42rem;
+}
+
+.pg-work-query {
+  display: inline-flex;
+  max-width: 100%;
+  border: 1px solid var(--pg-border-default);
+  border-radius: var(--pg-radius-full);
+  background: var(--pg-bg-surface-muted);
+  color: var(--pg-text-secondary);
+  padding: 0.2rem 0.46rem;
+  font-size: 0.76rem;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
 .pg-scroll-anchor {
   width: 1px;
   height: 1px;
-  scroll-margin-bottom: 8rem;
+  pointer-events: none;
+  scroll-margin-bottom: var(--pg-composer-safe-space);
 }
 
 @media (max-width: 720px) {
   .pg-chat-bubble,
   .pg-active-status {
     max-width: 86%;
+  }
+  .pg-activity-row {
+    width: calc(100% - 2.55rem);
+    margin-left: 2.55rem;
   }
   div[data-testid="stChatMessage"]:has(.pg-config-bubble-anchor) [data-testid="stChatMessageContent"],
   div[data-testid="stChatMessage"]:has(.pg-config-bubble-anchor) > div:last-child {
@@ -886,9 +1087,6 @@ div[data-testid="stBottomBlockContainer"] {
   div[data-testid="stForm"]:has(.pg-empty-composer-anchor),
   div[data-testid="stForm"]:has(.pg-docked-composer-anchor) {
     width: calc(100vw - 1.6rem);
-  }
-  div[data-testid="stForm"]:has(.pg-docked-composer-anchor) {
-    left: 50%;
   }
   .pg-empty-state {
     min-height: 38vh;
